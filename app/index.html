@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Challenge</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
+      type="text/javascript"
+    ></script>
+  </head>
+
+  <body id="container">
+    <header class="hero">
+      <nav class="nav-container">
+        <div class="nav-container-title">
+          <h2 class="nav-title">Bsale Test</h2>
+        </div>
+
+        <div class="nav-container-input">
+          <input
+            type="text"
+            placeholder="Tienda"
+            class="nav-input"
+            id="nav-input"
+          />
+        </div>
+
+        <div class="nav-container-trolley">
+          <a href="#tienda" class="nav-trolley"
+            ><img src="./assets/imgtrolley.png" class="nav-img-trolley"
+          /></a>
+        </div>
+        <select id="select-category">
+          <option selected value="all">todos</option>
+        </select>
+        <select id="sort-products">
+          <option selected value="nothing" disabled>sin filtros</option>
+          <option value="mayor a menor">mayor a menor precio</option>
+          <option value="menor a mayor">menor a mayor precio</option>
+        </select>
+      </nav>
+    </header>
+
+    <div id="cards"></div>
+
+    <script>
+      const selectCategory = document.getElementById("select-category");
+
+      const urlCat = "http://192.168.0.3:3000/categories";
+
+      fetch(urlCat, { method: "GET" })
+        .then((response) => response.json())
+        .then((responseJson) =>
+          responseJson.map((category) => {
+            const productCategory = document.createElement("option");
+            productCategory.textContent = category.name;
+            productCategory.value = category.id;
+            selectCategory.append(productCategory);
+          })
+        );
+    </script>
+
+    <script>
+      const cardContainer = document.getElementById("cards");
+
+      let idSelected = document.getElementById("select-category");
+
+      let sortProducts = document.getElementById("sort-products");
+
+      idSelected.addEventListener("change", function () {
+        fetchFun();
+        sortProducts.value = "nothing";
+      });
+
+      sortProducts.addEventListener("change", function () {
+        fetchFun();
+      });
+
+      let fetchFun = () => {
+        let id = parseInt(idSelected.value);
+
+        const url =
+          idSelected.value === "all"
+            ? `http://192.168.0.3:3000/products/`
+            : `http://192.168.0.3:3000/products/filterBy/${id}`;
+
+        const urlSorted =
+          idSelected.value === "all"
+            ? `http://192.168.0.3:3000/products/${
+                sortProducts.value === "mayor a menor"
+                  ? "orderHigher"
+                  : "orderLower"
+              }`
+            : `http://192.168.0.3:3000/products/filterBy/${id}/${
+                sortProducts.value === "mayor a menor"
+                  ? "orderHigher"
+                  : "orderLower"
+              }`;
+
+        cards.innerHTML = "";
+
+        fetch(sortProducts.value !== "nothing" ? urlSorted : url, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            responseJson
+              .sort((a, b) => {
+                if (sortProducts.value === "mayor a menor")
+                  return b.price - a.price;
+                if (sortProducts.value === "menor a mayor")
+                  return a.price - b.price;
+              })
+              .map((product) => {
+                const card = document.createElement("div");
+                card.id = "card";
+
+                const cardBottom = document.createElement("div");
+                cardBottom.id = "card-bottom";
+
+                const productName = document.createElement("p");
+                productName.id = "product-name";
+
+                const productPrice = document.createElement("p");
+                productPrice.id = "product-price";
+
+                const productImage = document.createElement("img");
+                productImage.id = "product-image";
+
+                productName.innerText = product.name;
+                productImage.src = product.url_image;
+                productPrice.innerText = "$" + product.price;
+
+                card.append(productImage);
+                card.append(productName);
+                card.append(cardBottom);
+
+                cardBottom.append(productPrice);
+
+                cardContainer.append(card);
+              });
+          })
+
+          .catch((err) => console.log(err));
+      };
+    </script>
+
+    <script>
+      const searching = document.getElementById("nav-input");
+      searching.addEventListener("change", function () {
+        const url = `http://192.168.0.3:3000/products/search/${searching.value.toLowerCase()}`;
+        cards.innerHTML = "";
+        fetch(url, { method: "GET" })
+          .then((response) => response.json())
+          .then((responseJson) =>
+            responseJson.map((product) => {
+              const card = document.createElement("div");
+              card.id = "card";
+
+              const cardBottom = document.createElement("div");
+              cardBottom.id = "card-bottom";
+
+              const productName = document.createElement("p");
+              productName.id = "product-name";
+
+              const productPrice = document.createElement("p");
+              productPrice.id = "product-price";
+
+              const productImage = document.createElement("img");
+              productImage.id = "product-image";
+
+              productName.innerText = product.name;
+              productImage.src = product.url_image;
+              productPrice.innerText = "$" + product.price;
+
+              card.append(productImage);
+              card.append(productName);
+              card.append(cardBottom);
+
+              cardBottom.append(productPrice);
+
+              cardContainer.append(card);
+              searching.value = "";
+            })
+          );
+      });
+    </script>
+  </body>
+</html>
