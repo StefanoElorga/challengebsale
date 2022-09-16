@@ -10,6 +10,6 @@ const routes = require("./routes/index.js");
 app.use("/", routes);
 
 //server listening
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 
 console.log("escuchando el puerto 3000");
