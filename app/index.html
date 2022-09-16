@@ -49,7 +49,7 @@
     <script>
       const selectCategory = document.getElementById("select-category");
 
-      const urlCat = "http://192.168.0.3:3000/categories";
+      const urlCat = "bsalestefano.herokuapp.com/categories";
 
       fetch(urlCat, { method: "GET" })
         .then((response) => response.json())
@@ -84,17 +84,17 @@
 
         const url =
           idSelected.value === "all"
-            ? `http://192.168.0.3:3000/products/`
-            : `http://192.168.0.3:3000/products/filterBy/${id}`;
+            ? `bsalestefano.herokuapp.com/products/`
+            : `bsalestefano.herokuapp.com/products/filterBy/${id}`;
 
         const urlSorted =
           idSelected.value === "all"
-            ? `http://192.168.0.3:3000/products/${
+            ? `bsalestefano.herokuapp.com/products/${
                 sortProducts.value === "mayor a menor"
                   ? "orderHigher"
                   : "orderLower"
               }`
-            : `http://192.168.0.3:3000/products/filterBy/${id}/${
+            : `bsalestefano.herokuapp.com/products/filterBy/${id}/${
                 sortProducts.value === "mayor a menor"
                   ? "orderHigher"
                   : "orderLower"
@@ -151,7 +151,7 @@
     <script>
       const searching = document.getElementById("nav-input");
       searching.addEventListener("change", function () {
-        const url = `http://192.168.0.3:3000/products/search/${searching.value.toLowerCase()}`;
+        const url = `bsalestefano.herokuapp.com/products/search/${searching.value.toLowerCase()}`;
         cards.innerHTML = "";
         fetch(url, { method: "GET" })
           .then((response) => response.json())
