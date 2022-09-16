@@ -69,6 +69,46 @@
     </script>
 
     <script>
+      const url = `http://bsalestefano.herokuapp.com/products/`;
+      fetch(url, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          responseJson.map((product) => {
+            const card = document.createElement("div");
+            card.id = "card";
+
+            const cardBottom = document.createElement("div");
+            cardBottom.id = "card-bottom";
+
+            const productName = document.createElement("p");
+            productName.id = "product-name";
+
+            const productPrice = document.createElement("p");
+            productPrice.id = "product-price";
+
+            const productImage = document.createElement("img");
+            productImage.id = "product-image";
+
+            productName.innerText = product.name;
+            productImage.src = product.url_image;
+            productPrice.innerText = "$" + product.price;
+
+            card.append(productImage);
+            card.append(productName);
+            card.append(cardBottom);
+
+            cardBottom.append(productPrice);
+
+            cardContainer.append(card);
+          });
+        })
+
+        .catch((err) => console.log(err));
+    </script>
+
+    <script>
       const cardContainer = document.getElementById("cards");
 
       let idSelected = document.getElementById("select-category");
@@ -99,7 +139,7 @@
                   ? "orderHigher"
                   : "orderLower"
               }`
-            : `bsalestefano.herokuapp.com/products/filterBy/${id}/${
+            : `http://bsalestefano.herokuapp.com/products/filterBy/${id}/${
                 sortProducts.value === "mayor a menor"
                   ? "orderHigher"
                   : "orderLower"
