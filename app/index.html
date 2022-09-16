@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
     <title>Challenge</title>
     <link rel="stylesheet" href="./styles.css" />
     <script
@@ -49,7 +53,7 @@
     <script>
       const selectCategory = document.getElementById("select-category");
 
-      const urlCat = "bsalestefano.herokuapp.com/categories";
+      const urlCat = "http://bsalestefano.herokuapp.com/categories";
 
       fetch(urlCat, { method: "GET" })
         .then((response) => response.json())
@@ -84,12 +88,12 @@
 
         const url =
           idSelected.value === "all"
-            ? `bsalestefano.herokuapp.com/products/`
-            : `bsalestefano.herokuapp.com/products/filterBy/${id}`;
+            ? `http://bsalestefano.herokuapp.com/products/`
+            : `http://bsalestefano.herokuapp.com/products/filterBy/${id}`;
 
         const urlSorted =
           idSelected.value === "all"
-            ? `bsalestefano.herokuapp.com/products/${
+            ? `http://bsalestefano.herokuapp.com/products/${
                 sortProducts.value === "mayor a menor"
                   ? "orderHigher"
                   : "orderLower"
@@ -151,7 +155,7 @@
     <script>
       const searching = document.getElementById("nav-input");
       searching.addEventListener("change", function () {
-        const url = `bsalestefano.herokuapp.com/products/search/${searching.value.toLowerCase()}`;
+        const url = `http://bsalestefano.herokuapp.com/products/search/${searching.value.toLowerCase()}`;
         cards.innerHTML = "";
         fetch(url, { method: "GET" })
           .then((response) => response.json())
